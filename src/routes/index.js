@@ -10,48 +10,46 @@ api.get('/add',isLoggedIn,(req,res)=>{
 })
 
 api.post('/add',isLoggedIn,async (req,res)=>{
-    const{first_name,last_name,company,job_title}=req.body
-    const newCustomer = {
-        first_name,
-        last_name,
-        company,
-        job_title
+    const{name,id_employee,city}=req.body
+    const newDepartment = {
+        name,
+        id_employee,
+        city
     }
-    await pool.query('INSERT INTO customers set ?',[newCustomer])
-    req.flash('success','Cliente Agregado Con Exito')
+    await pool.query('INSERT INTO departments set ?',[newDepartment])
+    req.flash('success','Departamento Agregado Con Exito')
     res.redirect('/links')
 })
 
 api.get('/',isLoggedIn,async(req,res)=>{
-    const customers = await pool.query('SELECT * FROM CUSTOMERS');
+    const departments = await pool.query('SELECT * FROM departments');
     
-    res.render('index',{customers})
+    res.render('index',{departments})
 })      
 
 api.get('/delete/:id',isLoggedIn,isAllowed,async(req,res)=>{
     const{id}=req.params
-    await pool.query('DELETE FROM customers WHERE id = ?',[id])
+    await pool.query('DELETE FROM departments WHERE id = ?',[id])
     req.flash('success','Cliente eliminado Con Exito')
     res.redirect('/links')
 })
 
 api.get('/edit/:id',isLoggedIn,async(req,res)=>{
     const{id}=req.params
-    const customer = await pool.query('SELECT * FROM customers WHERE id = ?',[id])
-    res.render('edit',{customer})
+    const departments = await pool.query('SELECT * FROM departments WHERE id = ?',[id])
+    res.render('edit',{departments})
 })
 
 api.post('/edit/:id',isLoggedIn,async(req,res)=>{
     const{id}=req.params
-    const {first_name,last_name,company,job_title} = req.body
-    const newCustomer = {
-        first_name,
-        last_name,
-        company,
-        job_title
+    const {name,id_employee,city} = req.body
+    const newDepartment = {
+        name,
+        id_employee,
+        city
     }
-    await pool.query('UPDATE customers set ? WHERE id = ?',[newCustomer,id])
-    req.flash('success','Cliente actualizado Con Exito')
+    await pool.query('UPDATE departments set ? WHERE id = ?',[newDepartment,id])
+    req.flash('success','Departamento actualizado Con Exito')
     res.redirect('/links')
 
 })
